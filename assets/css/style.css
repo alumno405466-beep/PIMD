@@ -1,0 +1,61 @@
+/* assets/css/style.css */
+
+/* Animación para el menú */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.menu-open {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estilos para las pilas de imágenes en hover */
+.group:hover .group-hover\:scale-105 {
+    transform: scale(1.05);
+    z-index: 50;
+}
+
+/* Transiciones suaves para todas las imágenes */
+img {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilo para los títulos de proyecto */
+h2, h1 {
+    letter-spacing: -0.03em;
+}
+
+/* Línea decorativa en hover para enlaces */
+a:not(.btn) {
+    transition: color 0.3s ease;
+}
+
+/* Efecto de aparición suave para las pilas */
+.relative.h-\[400px\] {
+    transition: all 0.3s ease;
+}
+
+/* Scrollbar personalizada (opcional) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

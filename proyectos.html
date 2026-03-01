@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos · Hugo Díaz</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tus estilos personalizados -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-black text-white font-['Inter']">
+
+    <!-- MENÚ OVERLAY (igual que en index) -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700">
+        <div class="text-center">
+            <nav class="space-y-8 md:space-y-12">
+                <a href="index.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">INICIO</a>
+                <a href="proyectos.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">PROYECTOS</a>
+                <a href="index.html#about" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">SOBRE MI</a>
+                <a href="index.html#contact" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">CONTACTO</a>
+            </nav>
+            <button id="closeMenu" class="absolute top-8 right-8 text-white hover:text-gray-400 transition-colors">
+                <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER (igual que en index) -->
+    <header class="fixed top-0 left-0 right-0 z-40 mix-blend-difference">
+        <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <button id="menuToggle" class="text-white hover:opacity-60 transition-opacity">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <span class="text-xs md:text-sm uppercase tracking-[0.3em] font-bold text-white">HUGO DÍAZ</span>
+            <div class="w-6 md:w-8"></div>
+        </div>
+    </header>
+
+    <!-- TÍTULO DE LA PÁGINA -->
+    <section class="pt-32 pb-16">
+        <div class="container mx-auto px-4">
+            <h1 class="text-7xl md:text-9xl lg:text-9xl font-black tracking-tighter">
+                PROYECTOS
+            </h1>
+            <p class="text-xl text-zinc-400 mt-4 max-w-2xl">
+                Una selección de trabajos visuales. Cada título es un enlace al proyecto completo.
+            </p>
+        </div>
+    </section>
+
+    <!-- LISTA DE PROYECTOS CON IMÁGENES APILADAS -->
+    <section class="pb-32">
+        <div class="container mx-auto px-4">
+            <div class="space-y-32">
+                
+                <!-- PROYECTO 01 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto01.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 01
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">_sinTitulo_ · 2025</p>
+                    
+                    <!-- PILA DE 3 IMÁGENES (APILADAS) -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-4deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo01/inicial.jpg" alt="Proyecto 5 - Imagen 1" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[-1deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo01/1.jpg" alt="Proyecto 5 - Imagen 2" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-8 left-8 md:top-16 md:left-16 w-full h-full transform rotate-[2deg] z-30 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo01/4.jpg" alt="Proyecto 5 - Imagen 3" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- PROYECTO 02 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto02.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 02
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">Haciendo click · 2024</p>
+                    
+                    <!-- PILA DE 2 IMÁGENES (APILADAS) -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <!-- Imagen 1 (fondo) -->
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-2deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo02/2proyectos.jpg" 
+                                 alt="Proyecto 2 - Imagen 1" 
+                                 class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <!-- Imagen 2 (delante) -->
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[2deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo02/5proyectos.jpg" 
+                                 alt="Proyecto 2 - Imagen 2" 
+                                 class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- PROYECTO 03 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto03.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 03
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">Still Waiting · 2021</p>
+                    
+                    <!-- PILA DE 3 IMÁGENES -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-4deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo03/2.jpg" alt="Proyecto 5 - Imagen 1" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[-1deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo03/1.jpg" alt="Proyecto 5 - Imagen 2" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-8 left-8 md:top-16 md:left-16 w-full h-full transform rotate-[2deg] z-30 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo03/inicial.jpg" alt="Proyecto 5 - Imagen 3" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+
+                <!-- PROYECTO 04 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto04.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 04
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">Paracaidista · 2023</p>
+                    
+                    <!-- PILA DE 2 IMÁGENES -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-1deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo04/inicial.jpg" alt="Proyecto 4 - Imagen 1" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[3deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo04/1.jpg" alt="Proyecto 4 - Imagen 2" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                    
+                    </div>
+                </div>
+
+                <!-- PROYECTO 05 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto05.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 05
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">En mi habitación · 2026</p>
+                    
+                    <!-- PILA DE 3 IMÁGENES -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-4deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo05/inicial.jpg" alt="Proyecto 5 - Imagen 1" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[-1deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo05/1.jpg" alt="Proyecto 5 - Imagen 2" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-8 left-8 md:top-16 md:left-16 w-full h-full transform rotate-[2deg] z-30 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo05/2.jpg" alt="Proyecto 5 - Imagen 3" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- PROYECTO 06 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto06.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 06
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">_sinTituloDOS_ · 2025</p>
+                    
+                    <!-- PILA DE 2 IMÁGENES -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-2deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo06/inicial.jpg" alt="Proyecto 6 - Imagen 1" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[1deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo06/1.jpg" alt="Proyecto 6 - Imagen 2" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- PROYECTO 07 -->
+                <div class="border-t border-zinc-800 pt-16">
+                    <a href="proyecto07.html" class="group inline-block">
+                        <h2 class="text-6xl md:text-8xl font-black tracking-tighter hover:text-zinc-400 transition-colors duration-300">
+                            PROYECTO 07
+                        </h2>
+                    </a>
+                    <p class="text-zinc-400 text-lg mt-2 mb-8">Papeles · 2021</p>
+                    
+                    <!-- PILA DE 2 IMÁGENES -->
+                    <div class="relative h-[400px] md:h-[500px] w-full mt-8">
+                        <div class="absolute top-0 left-0 w-full h-full transform rotate-[-2deg] z-10 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30">
+                            <img src="/assets/img/trabajo07/1.jpg" alt="Proyecto 6 - Imagen 1" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                        <div class="absolute top-4 left-4 md:top-8 md:left-8 w-full h-full transform rotate-[1deg] z-20 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-40">
+                            <img src="/assets/img/trabajo07/inicial.jpg" alt="Proyecto 6 - Imagen 2" class="w-full h-full object-cover rounded-lg shadow-2xl border border-zinc-700">
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-zinc-800 py-8">
+        <div class="container mx-auto px-4 text-center text-zinc-500 text-sm">
+            © 2026 HUGO DÍAZ · TODOS LOS DERECHOS RESERVADOS
+        </div>
+    </footer>
+
+    <!-- JavaScript (mismo que en index) -->
+    <script src="./assets/js/main.js"></script>
+</body>
+</html>

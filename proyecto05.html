@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 05 · Carrusel · Hugo Díaz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos para el carrusel horizontal */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 2rem 0;
+        }
+        
+        .carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            animation: scroll 40s linear infinite;
+            width: fit-content;
+        }
+        
+        .carousel-track:hover {
+            animation-play-state: paused;
+        }
+        
+        .carousel-item {
+            flex: 0 0 300px;
+            height: 400px;
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .carousel-item:hover {
+            transform: scale(1.05) translateY(-10px);
+            z-index: 10;
+        }
+        
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-item .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 1rem 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .carousel-item:hover .caption {
+            transform: translateY(0);
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-300px * 7 - 1.5rem * 6)); }
+        }
+        
+        /* Segunda fila (dirección inversa) */
+        .carousel-track.reverse {
+            animation: scroll-reverse 45s linear infinite;
+        }
+        
+        @keyframes scroll-reverse {
+            0% { transform: translateX(calc(-300px * 7 - 1.5rem * 6)); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* Modal para vista expandida */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        }
+        
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 0.5rem;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            cursor: pointer;
+            z-index: 101;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            cursor: pointer;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 101;
+        }
+        
+        .modal-nav:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .modal-nav.prev {
+            left: 2rem;
+        }
+        
+        .modal-nav.next {
+            right: 2rem;
+        }
+        
+        .modal-counter {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.875rem;
+            z-index: 101;
+        }
+        
+        /* Thumbnail strip */
+        .thumbnails {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .thumbnail:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .thumbnail.active {
+            opacity: 1;
+            border-color: white;
+            transform: scale(1.1);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-['Inter']">
+
+    <!-- MENÚ OVERLAY -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700">
+        <div class="text-center">
+            <nav class="space-y-8 md:space-y-12">
+                <a href="index.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">INICIO</a>
+                <a href="proyectos.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">PROYECTOS</a>
+                <a href="index.html#about" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">SOBRE MI</a>
+                <a href="index.html#contact" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">CONTACTO</a>
+            </nav>
+            <button id="closeMenu" class="absolute top-8 right-8 text-white hover:text-gray-400 transition-colors">
+                <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 mix-blend-difference">
+        <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <button id="menuToggle" class="text-white hover:opacity-60 transition-opacity">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <a href="proyectos.html" class="text-xs md:text-sm uppercase tracking-[0.3em] font-bold text-white hover:opacity-60 transition-opacity">
+                ← VOLVER A PROYECTOS
+            </a>
+            <div class="w-6 md:w-8"></div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="pt-32 pb-24">
+        <div class="container mx-auto px-4">
+            
+            <!-- Cabecera -->
+            <div class="mb-16">
+                <h1 class="text-7xl md:text-9xl font-black tracking-tighter">PROYECTO 05</h1>
+                <p class="text-xl text-zinc-400 mt-4">En mi habitación · 2026</p>
+                
+            </div>
+            
+            <!-- CARRUSEL 1 (sentido normal) -->
+            <div class="carousel-container mb-8">
+                <div class="carousel-track" id="carousel1">
+                </div>
+            </div>
+            
+            <!-- CARRUSEL 2 (sentido inverso) -->
+            <div class="carousel-container mb-12">
+                <div class="carousel-track reverse" id="carousel2">
+                </div>
+            </div>
+            
+            <!-- Miniaturas de navegación rápida -->
+            <div class="thumbnails" id="thumbnails"></div>
+            
+            
+        </div>
+    </main>
+
+    <!-- MODAL PARA VISTA EXPANDIDA -->
+    <div id="modal" class="modal">
+        <button class="modal-close" id="modalClose">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        
+        <button class="modal-nav prev" id="modalPrev">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        
+        <button class="modal-nav next" id="modalNext">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+        
+        <div class="modal-content">
+            <img src="" alt="Imagen expandida" id="modalImage">
+        </div>
+        
+        <div class="modal-counter" id="modalCounter"></div>
+        
+    </div>
+
+    <!-- Navegación entre proyectos -->
+            <div class="flex justify-between mt-24 pt-8 border-t border-zinc-800">
+                <a href="proyecto04.html" class="text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    <span class="uppercase tracking-wider text-sm">Anterior</span>
+                </a>
+                <a href="proyecto06.html" class="text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                    <span class="uppercase tracking-wider text-sm">Siguiente</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-zinc-800 py-8">
+        <div class="container mx-auto px-4 text-center text-zinc-500 text-sm">
+            © 2025 HUGO DÍAZ · TODOS LOS DERECHOS RESERVADOS
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Lista de imágenes en orden
+            const images = [
+                { file: 'inicial.jpg', name: 'Inicial' },
+                { file: '1.jpg', name: '01' },
+                { file: '2.jpg', name: '02' },
+                { file: '3.jpg', name: '03' },
+                { file: '4.jpg', name: '04' },
+                { file: '5.jpg', name: '05' },
+                { file: '6.jpg', name: '06' }
+            ];
+            
+            const basePath = '/assets/img/trabajo05/';
+            const carousel1 = document.getElementById('carousel1');
+            const carousel2 = document.getElementById('carousel2');
+            const thumbnails = document.getElementById('thumbnails');
+            
+            // Variables para el modal
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modalImage');
+            const modalClose = document.getElementById('modalClose');
+            const modalPrev = document.getElementById('modalPrev');
+            const modalNext = document.getElementById('modalNext');
+            const modalCounter = document.getElementById('modalCounter');
+            let currentImageIndex = 0;
+            
+            // Función para crear un item del carrusel
+            function createCarouselItem(image, index) {
+                const div = document.createElement('div');
+                div.className = 'carousel-item';
+                div.innerHTML = `
+                    <img src="${basePath}${image.file}" alt="${image.name}" loading="lazy">
+                    <div class="caption">
+                        <span class="text-sm uppercase tracking-wider">${image.name}</span>
+                    </div>
+                `;
+                div.addEventListener('click', () => openModal(index));
+                return div;
+            }
+            
+            // Llenar carrusel 1 (con duplicados para efecto infinito)
+            for (let i = 0; i < 3; i++) { // Duplicar 3 veces para efecto suave
+                images.forEach((image, index) => {
+                    carousel1.appendChild(createCarouselItem(image, index));
+                });
+            }
+            
+            // Llenar carrusel 2 (sentido inverso, también duplicado)
+            for (let i = 0; i < 3; i++) {
+                [...images].reverse().forEach((image, index) => {
+                    // Para el índice real necesitamos la posición original
+                    const originalIndex = images.length - 1 - index;
+                    carousel2.appendChild(createCarouselItem(image, originalIndex));
+                });
+            }
+            
+            // Crear miniaturas
+            images.forEach((image, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                thumb.innerHTML = `<img src="${basePath}${image.file}" alt="${image.name}">`;
+                thumb.addEventListener('click', () => openModal(index));
+                thumbnails.appendChild(thumb);
+            });
+            
+            // Función para abrir modal
+            function openModal(index) {
+                currentImageIndex = index;
+                updateModalImage();
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Actualizar miniaturas activas
+                document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                    if (i === index) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Actualizar imagen del modal
+            function updateModalImage() {
+                const image = images[currentImageIndex];
+                modalImage.src = `${basePath}${image.file}`;
+                modalCounter.textContent = `${image.name} · ${currentImageIndex + 1}/${images.length}`;
+            }
+            
+            // Navegación del modal
+            function nextImage() {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                updateModalImage();
+                
+                // Actualizar miniaturas
+                document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                    if (i === currentImageIndex) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+            
+            function prevImage() {
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                updateModalImage();
+                
+                // Actualizar miniaturas
+                document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                    if (i === currentImageIndex) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Event listeners del modal
+            modalClose.addEventListener('click', () => {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            modalNext.addEventListener('click', nextImage);
+            modalPrev.addEventListener('click', prevImage);
+            
+            // Cerrar modal con ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                
+                if (modal.classList.contains('active')) {
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        nextImage();
+                    } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        prevImage();
+                    }
+                }
+            });
+            
+            // Cerrar modal haciendo clic fuera de la imagen
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+        });
+    </script>
+</body>
+</html>

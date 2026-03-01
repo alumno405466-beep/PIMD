@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 07 · Hugo Díaz</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Efecto de luz para la imagen inicial */
+        .hero-image {
+            position: relative;
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .hero-image:hover::after {
+            opacity: 1;
+        }
+        
+        /* Efecto para la segunda imagen */
+        .secondary-image {
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: transform 0.5s ease;
+        }
+        
+        .secondary-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .image-caption {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            color: #d4d4d4;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Modal para ampliar */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            max-width: 95vw;
+            max-height: 95vh;
+        }
+        
+        .modal-content img {
+            max-width: 100%;
+            max-height: 95vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 0.25rem;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 101;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-['Inter']">
+
+    <!-- MENÚ OVERLAY -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700">
+        <div class="text-center">
+            <nav class="space-y-8 md:space-y-12">
+                <a href="index.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">INICIO</a>
+                <a href="proyectos.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">PROYECTOS</a>
+                <a href="index.html#about" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">SOBRE MI</a>
+                <a href="index.html#contact" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">CONTACTO</a>
+            </nav>
+            <button id="closeMenu" class="absolute top-8 right-8 text-white hover:text-gray-400 transition-colors">
+                <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 mix-blend-difference">
+        <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <button id="menuToggle" class="text-white hover:opacity-60 transition-opacity">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <a href="proyectos.html" class="text-xs md:text-sm uppercase tracking-[0.3em] font-bold text-white hover:opacity-60 transition-opacity">
+                ← VOLVER A PROYECTOS
+            </a>
+            <div class="w-6 md:w-8"></div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="pt-32 pb-24">
+        <div class="container mx-auto px-4 max-w-5xl">
+            
+            <!-- Cabecera -->
+            <div class="mb-12">
+                <h1 class="text-7xl md:text-9xl font-black tracking-tighter">PROYECTO 07</h1>
+                <p class="text-xl text-zinc-400 mt-4">Papeles · 2021</p>
+            </div>
+            
+            
+            <!-- IMAGEN INICIAL (protagonista) -->
+            <div class="mb-16">
+                <div class="hero-image cursor-pointer" onclick="openModal('/assets/img/trabajo07/inicial.jpg', 'inicial')">
+                    <img src="/assets/img/trabajo07/inicial.jpg" 
+                         alt="Inicial" 
+                         class="w-full h-auto rounded-2xl shadow-2xl">
+                    <div class="image-caption">INICIAL · clic para ampliar</div>
+                </div>
+                <div class="mt-4 text-right">
+                    <p class="text-sm text-zinc-500">Imagen principal · 2021</p>
+                </div>
+            </div>
+            
+            <!-- SEGUNDA IMAGEN (con texto al lado para dar contexto) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tight">MR LOVE</h2>
+                    <p class="text-zinc-400 leading-relaxed">
+                        Segunda parte de una casi infinita serie jamás mostrada al público.
+                    </p>
+                    <div class="mt-6 text-sm text-zinc-500 uppercase tracking-wider">
+                        <span>Formato original · 2021</span>
+                    </div>
+                </div>
+                
+                <div class="order-1 md:order-2">
+                    <div class="secondary-image cursor-pointer" onclick="openModal('/assets/img/trabajo07/1.jpg', '01')">
+                        <img src="/assets/img/trabajo07/1.jpg" 
+                             alt="01" 
+                             class="w-full h-auto rounded-xl shadow-2xl">
+                        <div class="image-caption">01 · clic para ampliar</div>
+                    </div>
+                </div>
+            </div>
+            
+          
+            
+            <!-- Navegación entre proyectos -->
+            <div class="mt-16 pt-8 border-t border-zinc-800 flex justify-between">
+                <a href="proyecto06.html" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2 group">
+                    <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Proyecto 06
+                </a>
+                
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL PARA AMPLIAR -->
+    <div id="modal" class="modal" onclick="if(event.target===this) closeModal()">
+        <button class="modal-close" onclick="closeModal()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="">
+        </div>
+        <div id="modalCaption" class="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full text-sm border border-white/10"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-zinc-800 py-8">
+        <div class="container mx-auto px-4 text-center text-zinc-500 text-sm">
+            © 2025 HUGO DÍAZ · TODOS LOS DERECHOS RESERVADOS
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+    <script>
+        // Función para abrir el modal
+        function openModal(imageSrc, caption) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('modalCaption').textContent = caption + ' · clic fuera para cerrar';
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Función para cerrar el modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('modal').classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 03 · Visualizador · Hugo Díaz</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para el visualizador */
+        .fade-transition {
+            transition: opacity 1.5s ease-in-out;
+        }
+        
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+        
+        .fade-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: black;
+        }
+        
+        .fade-image.active {
+            opacity: 1;
+            z-index: 10;
+        }
+        
+        .fade-image.previous {
+            opacity: 0;
+            z-index: 5;
+        }
+        
+        .control-btn {
+            @apply w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 
+                   flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300
+                   disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-white/10;
+        }
+        
+        .progress-bar {
+            @apply h-1 bg-white/20 rounded-full overflow-hidden;
+        }
+        
+        .progress-fill {
+            @apply h-full bg-white transition-all duration-300;
+        }
+        
+        /* Ocultar controles cuando el mouse no se mueve */
+        .controls-hidden .controls {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .controls {
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-['Inter']">
+
+    <!-- MENÚ OVERLAY (oculto por defecto) -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700">
+        <div class="text-center">
+            <nav class="space-y-8 md:space-y-12">
+                <a href="index.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">INICIO</a>
+                <a href="proyectos.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">PROYECTOS</a>
+                <a href="index.html#about" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">SOBRE MI</a>
+                <a href="index.html#contact" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">CONTACTO</a>
+            </nav>
+            <button id="closeMenu" class="absolute top-8 right-8 text-white hover:text-gray-400 transition-colors">
+                <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER (siempre visible) -->
+    <header class="fixed top-0 left-0 right-0 z-40 mix-blend-difference">
+        <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <button id="menuToggle" class="text-white hover:opacity-60 transition-opacity">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <a href="proyectos.html" class="text-xs md:text-sm uppercase tracking-[0.3em] font-bold text-white hover:opacity-60 transition-opacity">
+                ← VOLVER A PROYECTOS
+            </a>
+            <div class="w-6 md:w-8"></div>
+        </div>
+    </header>
+
+    <!-- VISUALIZADOR PRINCIPAL -->
+    <main class="fixed inset-0 bg-black">
+        
+        <!-- CONTENEDOR DE IMÁGENES -->
+        <div id="imageViewer" class="image-container w-full h-full">
+            <!-- Las imágenes se cargarán aquí dinámicamente con JavaScript -->
+        </div>
+        
+        <!-- CONTROLES SUPERPUESTOS -->
+        <div id="controls" class="controls fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-32 pb-8 px-4 md:px-8">
+            <div class="container mx-auto">
+                
+                <!-- Información del proyecto -->
+                <div class="mb-8 flex justify-between items-end">
+                    <div>
+                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter">PROYECTO 03</h1>
+                        <p class="text-zinc-400 text-sm md:text-base mt-2">Still waiting · 2021 · <span id="imageCount">0/0</span></p>
+                    </div>
+                    <div class="text-right text-zinc-400 text-sm hidden md:block">
+                        <p>Casa de abuela</p>
+                        <p>B&W</p>
+                    </div>
+                </div>
+                
+                <!-- Barra de progreso -->
+                <div class="progress-bar mb-4">
+                    <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+                
+                <!-- Botones de control -->
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-3">
+                        <button id="prevBtn" class="control-btn">
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button id="playPauseBtn" class="control-btn">
+                            <svg id="playIcon" class="w-5 h-5 md:w-6 md:h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <svg id="pauseIcon" class="w-5 h-5 md:w-6 md:h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </button>
+                        <button id="nextBtn" class="control-btn">
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="text-xs md:text-sm text-zinc-400">
+                        <span id="currentImage">1</span> / <span id="totalImages">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botón para ocultar/mostrar controles (opcional) -->
+        <button id="toggleControls" class="fixed bottom-4 right-4 z-40 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </button>
+        
+    </main>
+
+    <!-- FOOTER (oculto en esta página, pero lo dejamos por consistencia) -->
+    <footer class="bg-black border-t border-zinc-800 py-8">
+        <div class="container mx-auto px-4 text-center text-zinc-500 text-sm">
+            © 2026 HUGO DÍAZ · TODOS LOS DERECHOS RESERVADOS
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+    <script>
+        // ===== VISUALIZADOR ESPECÍFICO PARA PROYECTO 03 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Configuración
+            const imageFolder = '/assets/img/trabajo03/';
+            const imageNames = [
+                'inicial.jpg',
+                '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg', '11.jpg', '12.jpg',
+            ];
+            
+            let currentIndex = 0;
+            let totalImages = imageNames.length;
+            let intervalId = null;
+            let isPlaying = true;
+            let hideControlsTimeout;
+            
+            // Elementos DOM
+            const viewer = document.getElementById('imageViewer');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const playIcon = document.getElementById('playIcon');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const progressFill = document.getElementById('progressFill');
+            const currentSpan = document.getElementById('currentImage');
+            const totalSpan = document.getElementById('totalImages');
+            const imageCount = document.getElementById('imageCount');
+            const controls = document.getElementById('controls');
+            const toggleBtn = document.getElementById('toggleControls');
+            
+            // Actualizar contadores
+            totalSpan.textContent = totalImages;
+            imageCount.textContent = `1/${totalImages}`;
+            
+            // Crear contenedores de imágenes
+            imageNames.forEach((name, index) => {
+                const img = document.createElement('img');
+                img.src = imageFolder + name;
+                img.alt = `Proyecto 03 - Imagen ${index + 1}`;
+                img.className = `fade-image ${index === 0 ? 'active' : ''}`;
+                img.loading = 'lazy';
+                viewer.appendChild(img);
+            });
+            
+            const images = document.querySelectorAll('.fade-image');
+            
+            // Función para cambiar de imagen
+            function showImage(index, direction = 'next') {
+                if (index < 0) index = totalImages - 1;
+                if (index >= totalImages) index = 0;
+                
+                // Quitar clase active de todas
+                images.forEach(img => img.classList.remove('active'));
+                
+                // Añadir clase active a la nueva
+                images[index].classList.add('active');
+                
+                // Actualizar índice actual
+                currentIndex = index;
+                currentSpan.textContent = currentIndex + 1;
+                
+                // Actualizar barra de progreso
+                const progress = ((currentIndex + 1) / totalImages) * 100;
+                progressFill.style.width = `${progress}%`;
+                
+                // Actualizar contador
+                imageCount.textContent = `${currentIndex + 1}/${totalImages}`;
+            }
+            
+            // Función para siguiente imagen
+            function nextImage() {
+                showImage(currentIndex + 1);
+            }
+            
+            // Función para imagen anterior
+            function prevImage() {
+                showImage(currentIndex - 1);
+            }
+            
+            // Función para play/pause
+            function togglePlay() {
+                isPlaying = !isPlaying;
+                
+                if (isPlaying) {
+                    intervalId = setInterval(nextImage, 5000); // Cambia cada 5 segundos
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                } else {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                }
+            }
+            
+            // Iniciar reproducción automática
+            intervalId = setInterval(nextImage, 5000);
+            
+            // Event listeners
+            prevBtn.addEventListener('click', function() {
+                prevImage();
+                if (isPlaying) togglePlay(); // Pausar al navegar manualmente
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                nextImage();
+                if (isPlaying) togglePlay(); // Pausar al navegar manualmente
+            });
+            
+            playPauseBtn.addEventListener('click', togglePlay);
+            
+            // Navegación con teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    prevImage();
+                    if (isPlaying) togglePlay();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                    if (isPlaying) togglePlay();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    togglePlay();
+                }
+            });
+            
+            // Ocultar controles automáticamente
+            function resetHideTimer() {
+                clearTimeout(hideControlsTimeout);
+                document.body.classList.remove('controls-hidden');
+                hideControlsTimeout = setTimeout(() => {
+                    document.body.classList.add('controls-hidden');
+                }, 3000);
+            }
+            
+            document.addEventListener('mousemove', resetHideTimer);
+            document.addEventListener('keydown', resetHideTimer);
+            resetHideTimer();
+            
+            // Toggle manual de controles
+            toggleBtn.addEventListener('click', function() {
+                if (document.body.classList.contains('controls-hidden')) {
+                    document.body.classList.remove('controls-hidden');
+                    resetHideTimer();
+                } else {
+                    document.body.classList.add('controls-hidden');
+                    clearTimeout(hideControlsTimeout);
+                }
+            });
+            
+            // Touch para móviles
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+            
+            document.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    nextImage();
+                    if (isPlaying) togglePlay();
+                } else if (touchEndX > touchStartX + swipeThreshold) {
+                    prevImage();
+                    if (isPlaying) togglePlay();
+                }
+            }
+            
+        });
+    </script>
+</body>
+</html>

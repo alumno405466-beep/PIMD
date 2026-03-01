@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 04 · Línea de Tiempo · Hugo Díaz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #fff, #fff, transparent);
+            opacity: 0.3;
+        }
+        
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .timeline-item:nth-child(even) .content {
+            margin-left: auto;
+        }
+        
+        .year-marker {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-['Inter']">
+
+    <!-- MENÚ OVERLAY (igual) -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700">
+        <div class="text-center">
+            <nav class="space-y-8 md:space-y-12">
+                <a href="index.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">INICIO</a>
+                <a href="proyectos.html" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">PROYECTOS</a>
+                <a href="index.html#about" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">SOBRE MI</a>
+                <a href="index.html#contact" class="block text-5xl md:text-7xl lg:text-8xl font-black hover:text-gray-400 transition-colors duration-300 tracking-tighter">CONTACTO</a>
+            </nav>
+            <button id="closeMenu" class="absolute top-8 right-8 text-white hover:text-gray-400 transition-colors">
+                <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 mix-blend-difference">
+        <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <button id="menuToggle" class="text-white hover:opacity-60 transition-opacity">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <a href="proyectos.html" class="text-xs md:text-sm uppercase tracking-[0.3em] font-bold text-white hover:opacity-60 transition-opacity">
+                ← VOLVER A PROYECTOS
+            </a>
+            <div class="w-6 md:w-8"></div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="pt-32 pb-24">
+        <div class="container mx-auto px-4">
+            
+            <!-- Cabecera -->
+            <div class="mb-16 text-center">
+                <h1 class="text-7xl md:text-9xl font-black tracking-tighter">PROYECTO 04</h1>
+                <p class="text-xl text-zinc-400 mt-4">Paracaidista · 2023</p>
+            </div>
+            
+            <!-- LÍNEA DE TIEMPO -->
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Línea vertical central -->
+                <div class="timeline-line hidden md:block"></div>
+                
+                <div class="year-marker text-center mb-16">
+                    <span class="text-6xl md:text-8xl font-black text-zinc-800">----</span>
+                </div>
+                
+                <div class="space-y-24">
+                    
+                    <!-- Item 1 - Inicial -->
+                    <div class="timeline-item relative flex flex-col md:flex-row items-center gap-8">
+                        <div class="md:w-1/2 md:text-right">
+                            <h3 class="text-2xl font-bold mt-2">El inicio</h3>
+                        </div>
+                        <div class="md:w-1/2">
+                            <img src="/assets/img/trabajo04/inicial.jpg" 
+                                 alt="Inicial" 
+                                 class="w-full rounded-lg shadow-2xl">
+                        </div>
+                    </div>
+                    
+                    <!-- Item 2 -->
+                    <div class="timeline-item relative flex flex-col md:flex-row-reverse items-center gap-8">
+                        <div class="md:w-1/2 md:text-left">
+                            <h3 class="text-2xl font-bold mt-2">Serie 01</h3>
+                        </div>
+                        <div class="md:w-1/2">
+                            <img src="/assets/img/trabajo04/1.jpg" 
+                                 alt="1" 
+                                 class="w-full rounded-lg shadow-2xl">
+                        </div>
+                    </div>
+                    
+                    <!-- Item 3 -->
+                    <div class="timeline-item relative flex flex-col md:flex-row items-center gap-8">
+                        <div class="md:w-1/2 md:text-right">
+                            <h3 class="text-2xl font-bold mt-2">Serie 02</h3>
+                        </div>
+                        <div class="md:w-1/2">
+                            <img src="/assets/img/trabajo04/2.jpg" 
+                                 alt="2" 
+                                 class="w-full rounded-lg shadow-2xl">
+                        </div>
+                    </div>
+                    
+                    <!-- Item 4 -->
+                    <div class="timeline-item relative flex flex-col md:flex-row-reverse items-center gap-8">
+                        <div class="md:w-1/2 md:text-left">
+                            <h3 class="text-2xl font-bold mt-2">Serie 03</h3>
+                        </div>
+                        <div class="md:w-1/2">
+                            <img src="/assets/img/trabajo04/3.jpg" 
+                                 alt="3" 
+                                 class="w-full rounded-lg shadow-2xl">
+                        </div>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="timeline-item relative flex flex-col md:flex-row items-center gap-8">
+                        <div class="md:w-1/2 md:text-right">
+                            <h3 class="text-2xl font-bold mt-2">Serie 04</h3>
+                        </div>
+                        <div class="md:w-1/2">
+                            <img src="/assets/img/trabajo04/4.jpg" 
+                                 alt="2" 
+                                 class="w-full rounded-lg shadow-2xl">
+                        </div>
+                    </div>
+
+                    <!-- Item 6 -->
+                    <div class="timeline-item relative flex flex-col md:flex-row-reverse items-center gap-8">
+                        <div class="md:w-1/2 md:text-left">
+                            <h3 class="text-2xl font-bold mt-2">Serie 05</h3>
+                        </div>
+                        <div class="md:w-1/2">
+                            <img src="/assets/img/trabajo04/5.jpg" 
+                                 alt="3" 
+                                 class="w-full rounded-lg shadow-2xl">
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="year-marker text-center mt-16">
+                    <span class="text-6xl md:text-8xl font-black text-zinc-800">----</span>
+                </div>
+            </div>
+            <!-- Navegación entre proyectos -->
+            <div class="flex justify-between mt-24 pt-8 border-t border-zinc-800">
+                <a href="proyecto03.html" class="text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    <span class="uppercase tracking-wider text-sm">Anterior</span>
+                </a>
+                <a href="proyecto05.html" class="text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                    <span class="uppercase tracking-wider text-sm">Siguiente</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-zinc-800 py-8">
+        <div class="container mx-auto px-4 text-center text-zinc-500 text-sm">
+            © 2026 HUGO DÍAZ · TODOS LOS DERECHOS RESERVADOS
+        </div>
+    </footer>
+    <script src="./assets/js/main.js"></script>
+    <script>
+        // Animación al hacer scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
